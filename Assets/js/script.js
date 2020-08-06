@@ -36,14 +36,17 @@ function search() {
         $(`#${queryValue.replace(' ', "-")}`).remove();
     }
 
-    //prepend button for search history
-    const lastCall = $("<button id='" + queryValue.replace(' ', "-") + "' class='history'></button>");
-    lastCall.text(queryValue);
-    $("#search-history").prepend(lastCall);
-
     //assign city and (if state) state
     city = searchTerm[0];
     //(searchTerm[1]) ? city += "," + searchTerm[1]: console.log("no state");
+
+
+    //prepend button for search history
+    const lastCall = $("<button id='" + city.replace(' ', "-") + "' class='history'></button>");
+    lastCall.text(queryValue);
+    $("#search-history").prepend(lastCall);
+
+    
 
     let queryURL = urlBase + city + apiKey
 
@@ -109,7 +112,7 @@ function getUV(response){
     
 }
 
-
+//set click event on history buttons
 $(document).on('click','.history',function(e){
     e.preventDefault();
     isHistory = true;

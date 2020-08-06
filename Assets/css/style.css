@@ -1,0 +1,75 @@
+
+body {
+    background: white;
+}
+
+#main {
+    margin: 20px;
+}
+
+
+/*SEARCH BOX*/
+
+aside {
+    margin: 6px;
+    background-color: rgba(243, 240, 204, 0.925);
+    border-radius: 8px;
+}
+
+form {
+    margin: 10px;
+}
+
+input {
+    width: 70%;
+}
+
+#submit {
+    background-color: rgb(55, 175, 255);
+    border: 1px solid blue;
+    color: whitesmoke;
+    font-size: x-small;
+    text-align: center;
+    width: 20%;
+}
+
+#search-history {
+    padding-bottom: 10px;
+}
+.history {
+    width: 100%;
+    text-align: left;
+    border: 1px solid gray;
+    background-color: white;
+    padding-bottom: 4px;
+    margin-left: -5px;
+    margin-bottom: -1px;
+    
+}
+
+/*RESULTS BOX*/
+
+#results-box {
+    margin: 6px;
+    padding-top: 10px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#current-weather {
+    border: 1px gray solid;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+h3 {
+    font-size: 3vw;
+}
+
+#uv {
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-bottom: 3px;
+    border-radius: 4px;
+}

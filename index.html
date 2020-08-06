@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='en-us'>
+
+<head>
+
+    <!--bootstrap, font awesome, meta, css-->
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+    <script src="https://use.fontawesome.com/0d701d042a.js"></script>
+    <link href='./Assets/css/style.css' rel='stylesheet' type='text/css'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+    <title>Weather Dashboard</title>
+</head>
+
+<body>
+    <div class="container">
+    <header class="row"><div class="col-12 bg-dark text-light text-center"><h1>Weather Dashboard</h1></div></header>
+
+    <section id="main" class="row">
+        <aside id="search-box" class="col-3">
+            <div id="search-form">
+                <form>
+                    <label for="query">Search for a City:</label>
+                    <div class="row">
+                        <input type="text" name="query" id="query"/>
+                        <button type="submit" id="submit" class="fa fa-search btn" aria-hidden="true"></button>
+                    </div>
+                </form>
+            </div>
+            <div id="search-history"></div>
+        </aside>
+
+        <article id="results-box" class="col-8">
+            <div id="current-weather">
+            </div>
+            <div id="forecast">
+                <h3 id="forecast-title"></h3>
+            </div>
+        </aside>
+    </section>
+</div>
+    <!--moment, jquery, and script.js-->
+    <script src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='./Assets/js/script.js'></script>
+</body>
+</html>

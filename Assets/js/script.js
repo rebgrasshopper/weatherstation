@@ -1,11 +1,80 @@
+//Tasks
+// fix buttons losing state ID
+//add 5 day forecast
+
+
 const apiKey = "&appid=4e5d3cc57c8eb2f1baa615bd2033d24d";
 const urlBase = "http://api.openweathermap.org/data/2.5/weather?q=";
 const weatherDiv = $("#current-weather");
+//thanks to mshafrir on github for making this list so I didn't have to type it
+const states = {
+    "AL": "Alabama",
+    "AK": "Alaska",
+    "AS": "American Samoa",
+    "AZ": "Arizona",
+    "AR": "Arkansas",
+    "CA": "California",
+    "CO": "Colorado",
+    "CT": "Connecticut",
+    "DE": "Delaware",
+    "DC": "District Of Columbia",
+    "FM": "Federated States Of Micronesia",
+    "FL": "Florida",
+    "GA": "Georgia",
+    "GU": "Guam",
+    "HI": "Hawaii",
+    "ID": "Idaho",
+    "IL": "Illinois",
+    "IN": "Indiana",
+    "IA": "Iowa",
+    "KS": "Kansas",
+    "KY": "Kentucky",
+    "LA": "Louisiana",
+    "ME": "Maine",
+    "MH": "Marshall Islands",
+    "MD": "Maryland",
+    "MA": "Massachusetts",
+    "MI": "Michigan",
+    "MN": "Minnesota",
+    "MS": "Mississippi",
+    "MO": "Missouri",
+    "MT": "Montana",
+    "NE": "Nebraska",
+    "NV": "Nevada",
+    "NH": "New Hampshire",
+    "NJ": "New Jersey",
+    "NM": "New Mexico",
+    "NY": "New York",
+    "NC": "North Carolina",
+    "ND": "North Dakota",
+    "MP": "Northern Mariana Islands",
+    "OH": "Ohio",
+    "OK": "Oklahoma",
+    "OR": "Oregon",
+    "PW": "Palau",
+    "PA": "Pennsylvania",
+    "PR": "Puerto Rico",
+    "RI": "Rhode Island",
+    "SC": "South Carolina",
+    "SD": "South Dakota",
+    "TN": "Tennessee",
+    "TX": "Texas",
+    "UT": "Utah",
+    "VT": "Vermont",
+    "VI": "Virgin Islands",
+    "VA": "Virginia",
+    "WA": "Washington",
+    "WV": "West Virginia",
+    "WI": "Wisconsin",
+    "WY": "Wyoming"
+}
+console.log(states);
 let cityForPrint;
 let city;
 let state;
 let isHistory = false;
 let mostRecentButton;
+let queryURL;
 
 //q={city name},{state code}&appid={your api key}
 $("#submit").on("click", function(e){
@@ -38,8 +107,16 @@ function search() {
 
     //assign city and (if state) state
     city = searchTerm[0];
-    //(searchTerm[1]) ? city += "," + searchTerm[1]: console.log("no state");
-
+    if (searchTerm[1]) {
+        if (searchTerm[1].length === 2) {
+            state = states[searchTerm[1].toUpperCase()];
+        } else {
+            state = searchTerm[1];
+        }
+    } else {
+        state = null;
+    }
+    console.log(state);
 
     //prepend button for search history
     const lastCall = $("<button id='" + city.replace(' ', "-") + "' class='history'></button>");
@@ -47,8 +124,12 @@ function search() {
     $("#search-history").prepend(lastCall);
 
     
-
-    let queryURL = urlBase + city + apiKey
+    if (state) {
+        queryURL = urlBase + city + "," + state + apiKey
+    } else {
+        queryURL = urlBase + city + apiKey
+    }
+    
 
     //ajax query
     $.ajax({

@@ -107,3 +107,9 @@ function getUV(response){
 }
 
 
+$(document).on('click','.history',function(e){
+    e.preventDefault();
+    mostRecentButton = $(this).attr("id").replace("-", " ");
+    console.log(mostRecentButton);
+
+});

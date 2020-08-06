@@ -15,9 +15,21 @@ $("#submit").on("click", function(e){
 });
 
 function search() {
-    //add search to recent history
-    const queryValue = $("#query").val().trim();
-    console.log(queryValue);
+
+    
+    //set queryValue based on isHistory
+    let queryValue;
+    let searchTerm;
+
+    if (isHistory) {
+        queryValue = mostRecentButton;
+    } else {
+        queryValue = $("#query").val().trim();
+    }
+
+
+    //set searchTerm
+    searchTerm = queryValue.split(",").map(item => item.trim());
 
     //remove identical buttons
     if ($(`#${queryValue.replace(' ', "-")}`)) {
@@ -28,15 +40,6 @@ function search() {
     const lastCall = $("<button id='" + queryValue.replace(' ', "-") + "' class='history'></button>");
     lastCall.text(queryValue);
     $("#search-history").prepend(lastCall);
-
-    //set searchTerm
-    let searchTerm;
-    if (isHistory) {
-        searchTerm;
-    } else {
-        searchTerm = queryValue.split(",").map(item => item.trim());
-    }
-
 
     //assign city and (if state) state
     city = searchTerm[0];
@@ -109,7 +112,8 @@ function getUV(response){
 
 $(document).on('click','.history',function(e){
     e.preventDefault();
+    isHistory = true;
     mostRecentButton = $(this).attr("id").replace("-", " ");
     console.log(mostRecentButton);
-
+    search();
 });

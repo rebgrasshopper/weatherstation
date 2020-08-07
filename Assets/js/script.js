@@ -1,74 +1,10 @@
 //Tasks
-// fix buttons losing state ID
-//add 5 day forecast
 
 
 const apiKey = "&appid=4e5d3cc57c8eb2f1baa615bd2033d24d";
 const urlBase = "http://api.openweathermap.org/data/2.5/weather?q=";
 const weatherDiv = $("#current-weather");
-//thanks to mshafrir on github for making this list so I didn't have to type it
-const states = {
-    "AL": "Alabama",
-    "AK": "Alaska",
-    "AS": "American Samoa",
-    "AZ": "Arizona",
-    "AR": "Arkansas",
-    "CA": "California",
-    "CO": "Colorado",
-    "CT": "Connecticut",
-    "DE": "Delaware",
-    "DC": "District Of Columbia",
-    "FM": "Federated States Of Micronesia",
-    "FL": "Florida",
-    "GA": "Georgia",
-    "GU": "Guam",
-    "HI": "Hawaii",
-    "ID": "Idaho",
-    "IL": "Illinois",
-    "IN": "Indiana",
-    "IA": "Iowa",
-    "KS": "Kansas",
-    "KY": "Kentucky",
-    "LA": "Louisiana",
-    "ME": "Maine",
-    "MH": "Marshall Islands",
-    "MD": "Maryland",
-    "MA": "Massachusetts",
-    "MI": "Michigan",
-    "MN": "Minnesota",
-    "MS": "Mississippi",
-    "MO": "Missouri",
-    "MT": "Montana",
-    "NE": "Nebraska",
-    "NV": "Nevada",
-    "NH": "New Hampshire",
-    "NJ": "New Jersey",
-    "NM": "New Mexico",
-    "NY": "New York",
-    "NC": "North Carolina",
-    "ND": "North Dakota",
-    "MP": "Northern Mariana Islands",
-    "OH": "Ohio",
-    "OK": "Oklahoma",
-    "OR": "Oregon",
-    "PW": "Palau",
-    "PA": "Pennsylvania",
-    "PR": "Puerto Rico",
-    "RI": "Rhode Island",
-    "SC": "South Carolina",
-    "SD": "South Dakota",
-    "TN": "Tennessee",
-    "TX": "Texas",
-    "UT": "Utah",
-    "VT": "Vermont",
-    "VI": "Virgin Islands",
-    "VA": "Virginia",
-    "WA": "Washington",
-    "WV": "West Virginia",
-    "WI": "Wisconsin",
-    "WY": "Wyoming"
-}
-console.log(states);
+const currentDate = moment().format("MM/DD/YYYY");
 let cityForPrint;
 let city;
 let state;
@@ -76,56 +12,51 @@ let isHistory = false;
 let mostRecentButton;
 let queryURL;
 
-//q={city name},{state code}&appid={your api key}
-$("#submit").on("click", function(e){
-    e.preventDefault();
-    isHistory = false;
-    search();
-});
+
+
+
+
+
 
 function search() {
 
     
     //set queryValue based on isHistory
     let queryValue;
-    let searchTerm;
 
     if (isHistory) {
         queryValue = mostRecentButton;
     } else {
         queryValue = $("#query").val().trim();
+        $("#query").val("");
     }
 
 
     //set searchTerm
-    searchTerm = queryValue.split(",").map(item => item.trim());
-
+    let searchTerm = queryValue.split(",").map(item => item.trim());
     //remove identical buttons
-    if ($(`#${queryValue.replace(' ', "-")}`)) {
-        $(`#${queryValue.replace(' ', "-")}`).remove();
+    if ($(`#${queryValue.replace(/,\s/g, "").replace(/\s/g, "")}`)) {
+        $(`#${queryValue.replace(/,\s/g, "").replace(/\s/g, "")}`).remove();
     }
 
     //assign city and (if state) state
     city = searchTerm[0];
     if (searchTerm[1]) {
-        if (searchTerm[1].length === 2) {
-            state = states[searchTerm[1].toUpperCase()];
-        } else {
-            state = searchTerm[1];
-        }
+        state = "," + searchTerm[1] + ",us";
     } else {
         state = null;
     }
-    console.log(state);
 
     //prepend button for search history
-    const lastCall = $("<button id='" + city.replace(' ', "-") + "' class='history'></button>");
+    const lastCall = $("<button class='history'></button>");
+    lastCall.data("location", queryValue);
+    lastCall.attr("id", queryValue.replace(/,\s/g, "").replace(/\s/g, ""));
     lastCall.text(queryValue);
     $("#search-history").prepend(lastCall);
 
-    
+    //set up queryURL
     if (state) {
-        queryURL = urlBase + city + "," + state + apiKey
+        queryURL = urlBase + city + state + apiKey
     } else {
         queryURL = urlBase + city + apiKey
     }
@@ -138,15 +69,15 @@ function search() {
     }).then(showResponse)
 }
 
+
 function showResponse(response){
-    console.log(response);
 
     //set current weather data
     weatherDiv.empty();
 
     const currentHeader = $("<h3>");
     const iconURL = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png";
-    currentHeader.html(`${response.name} (${moment().format("MM/DD/YYYY")})<img src=${iconURL} style="width:50px"/>`);
+    currentHeader.html(`${response.name} (${currentDate})<img src=${iconURL} style="width:50px"/>`);
     weatherDiv.append(currentHeader);
 
     const tempInFarenheight = (parseInt(response.main.temp) -273.15) * 9/5 + 32; 
@@ -168,16 +99,20 @@ function showResponse(response){
     }).then(getUV);
 
     //set up 5 day forecast
+    const forecastURL = "http://api.openweathermap.org/data/2.5/forecast?id=" + response.id + apiKey;
+    $.ajax({
+        url: forecastURL,
+        method: "GET"
+    }).then(getForecast);
 }
 
 //look for UV value once initial weather response is returned
 function getUV(response){
-    console.log(response);
     uv = response.value;
-    console.log(uv);
     const uvDiv = $(`<p>UV Index: <span id="uv">${uv}</span></p>`);
     weatherDiv.append(uvDiv);
 
+    //set color based on UV chart
     if (parseInt(uv) < 3) {
         $("#uv").css("background-color", "green");
     } else if (parseInt(uv) < 6) {
@@ -193,11 +128,53 @@ function getUV(response){
     
 }
 
+
+
+function getForecast(response) {
+    const forecastDiv = $("#forecast");
+    forecastDiv.empty();
+
+    //populate 5 days out
+    let index = 4;
+    for (let i = 0; i < 5; i++) {
+        const oneDay = $("<div class='day'></div>");
+        
+        const date = moment().add(i+1, "days").format("MM/DD/YYYY");
+        const title = $(`<h5>${date}</h5>`)
+        oneDay.append(title);
+
+        const iconURL = "https://openweathermap.org/img/wn/" + response.list[index].weather[0].icon + "@2x.png";
+        const iconImg = $(`<img src=${iconURL} style="width:30px"/>`);
+        oneDay.append(iconImg);
+        
+        const temp = (parseInt(response.list[index].main.temp) -273.15) * 9/5 + 32; 
+        const tempDiv = $("<p class='one-day'></p>");
+        tempDiv.html(`Temp: ${temp.toFixed(1)} °F`);
+        oneDay.append(tempDiv);
+
+        const humidityDiv = $("<p class='one-day'></p>");
+        humidityDiv.html(`Humidity: ${response.list[index].main.humidity}%`);
+        oneDay.append(humidityDiv);
+
+        //append finished day to forecast        
+        forecastDiv.append(oneDay);
+        index += 8;
+    }
+}
+
+
+//set click even on search submit button
+$("#submit").on("click", function(e){
+    e.preventDefault();
+    isHistory = false;
+    search();
+});
+
+
 //set click event on history buttons
 $(document).on('click','.history',function(e){
     e.preventDefault();
     isHistory = true;
-    mostRecentButton = $(this).attr("id").replace("-", " ");
-    console.log(mostRecentButton);
+    mostRecentButton = $(this).data("location");
     search();
 });

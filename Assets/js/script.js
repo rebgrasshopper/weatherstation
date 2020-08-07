@@ -3,6 +3,13 @@ const apiKey = "&appid=4e5d3cc57c8eb2f1baa615bd2033d24d";
 const urlBase = "https://api.openweathermap.org/data/2.5/weather?q=";
 const weatherDiv = $("#current-weather");
 const currentDate = moment().format("MM/DD/YYYY");
+const stateAbbreviations = [
+    'AL','AK','AS','AZ','AR','CA','CO','CT','DE','DC','FM','FL','GA',
+    'GU','HI','ID','IL','IN','IA','KS','KY','LA','ME','MH','MD','MA',
+    'MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND',
+    'MP','OH','OK','OR','PW','PA','PR','RI','SC','SD','TN','TX','UT',
+    'VT','VI','VA','WA','WV','WI','WY'
+   ]; //state abbreviations provided by github.com/bubblerun
 let cityForPrint;
 let city;
 let state;
@@ -38,7 +45,13 @@ function search() {
     //assign city and (if state) state
     city = searchTerm[0];
     if (searchTerm[1]) {
-        state = "," + searchTerm[1] + ",us";
+        if (stateAbbreviations.indexOf(searchTerm[1].toUpperCase())>-1) {
+            console.log("It's a state!");
+            state = "," + searchTerm[1] + ",us";
+        } else {
+            state = "," + searchTerm[1];
+        }
+        console.log(state);
     } else {
         state = null;
     }

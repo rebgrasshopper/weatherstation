@@ -57,6 +57,15 @@ input {
     border-radius: 8px;
 }
 
+/* temp weather */
+
+#temp-weather {
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+}
+
 /* current weather */
 
 #current-weather {
@@ -99,3 +108,48 @@ h5 {
     margin-bottom: 4px;
 }
 
+/* partial width monitor displays */
+@media screen and (max-width: 992px) {
+    #forecast {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .day {
+        padding: 10px 6px 0px 6px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .day div {
+        display: flex;
+    }
+
+    .day img {
+        margin-top: 0px;
+        margin-bottom: 14px;
+    }
+
+    .day p {
+        padding-top: 6px;
+        margin: 0px 5px 0px 5px;
+    }
+
+    .day h5 {
+        padding-top: 5px;
+    }
+}
+
+/* tiny screens */
+@media screen and (max-width: 772px) {
+
+    .day {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .day div {
+        display: block;
+        margin-top: -6px;
+    }
+}

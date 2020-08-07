@@ -139,22 +139,26 @@ function getForecast(response) {
     for (let i = 0; i < 5; i++) {
         const oneDay = $("<div class='day'></div>");
         
+        const dateIconDiv = $("<div>");
         const date = moment().add(i+1, "days").format("MM/DD/YYYY");
         const title = $(`<h5>${date}</h5>`)
-        oneDay.append(title);
+        dateIconDiv.append(title);
 
         const iconURL = "https://openweathermap.org/img/wn/" + response.list[index].weather[0].icon + "@2x.png";
         const iconImg = $(`<img src=${iconURL} style="width:30px"/>`);
-        oneDay.append(iconImg);
-        
+        dateIconDiv.append(iconImg);
+        oneDay.append(dateIconDiv);
+
+        const textItemsDiv = $("<div>");
         const temp = (parseInt(response.list[index].main.temp) -273.15) * 9/5 + 32; 
         const tempDiv = $("<p class='one-day'></p>");
         tempDiv.html(`Temp: ${temp.toFixed(1)} °F`);
-        oneDay.append(tempDiv);
+        textItemsDiv.append(tempDiv);
 
         const humidityDiv = $("<p class='one-day'></p>");
         humidityDiv.html(`Humidity: ${response.list[index].main.humidity}%`);
-        oneDay.append(humidityDiv);
+        textItemsDiv.append(humidityDiv);
+        oneDay.append(textItemsDiv);
 
         //append finished day to forecast        
         forecastDiv.append(oneDay);

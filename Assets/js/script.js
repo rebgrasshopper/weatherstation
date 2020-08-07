@@ -1,8 +1,6 @@
-//Tasks
-
-
+//Variables
 const apiKey = "&appid=4e5d3cc57c8eb2f1baa615bd2033d24d";
-const urlBase = "http://api.openweathermap.org/data/2.5/weather?q=";
+const urlBase = "https://api.openweathermap.org/data/2.5/weather?q=";
 const weatherDiv = $("#current-weather");
 const currentDate = moment().format("MM/DD/YYYY");
 let cityForPrint;
@@ -16,10 +14,9 @@ let queryURL;
 
 
 
-
+//Functions
 
 function search() {
-
     
     //set queryValue based on isHistory
     let queryValue;
@@ -30,7 +27,6 @@ function search() {
         queryValue = $("#query").val().trim();
         $("#query").val("");
     }
-
 
     //set searchTerm
     let searchTerm = queryValue.split(",").map(item => item.trim());
@@ -61,7 +57,6 @@ function search() {
         queryURL = urlBase + city + apiKey
     }
     
-
     //ajax query
     $.ajax({
         url: queryURL,
@@ -92,14 +87,14 @@ function showResponse(response){
 
     //find uv index
     let uv;
-    const uvURL = `http://api.openweathermap.org/data/2.5/uvi?lat=${response.coord.lat}&lon=${response.coord.lon}&appid=4e5d3cc57c8eb2f1baa615bd2033d24d`
+    const uvURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${response.coord.lat}&lon=${response.coord.lon}&appid=4e5d3cc57c8eb2f1baa615bd2033d24d`
     $.ajax({
         url: uvURL,
         method: "GET"
     }).then(getUV);
 
     //set up 5 day forecast
-    const forecastURL = "http://api.openweathermap.org/data/2.5/forecast?id=" + response.id + apiKey;
+    const forecastURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + response.id + apiKey;
     $.ajax({
         url: forecastURL,
         method: "GET"
@@ -129,7 +124,7 @@ function getUV(response){
 }
 
 
-
+//look for 5 day forecast once initial weather response returns
 function getForecast(response) {
     const forecastDiv = $("#forecast");
     forecastDiv.empty();

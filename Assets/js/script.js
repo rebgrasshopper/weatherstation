@@ -46,12 +46,10 @@ function search() {
     city = searchTerm[0];
     if (searchTerm[1]) {
         if (stateAbbreviations.indexOf(searchTerm[1].toUpperCase())>-1) {
-            console.log("It's a state!");
             state = "," + searchTerm[1] + ",us";
         } else {
             state = "," + searchTerm[1];
         }
-        console.log(state);
     } else {
         state = null;
     }
@@ -79,6 +77,7 @@ function search() {
 
 
 function showResponse(response){
+    console.log(response);
 
     //set current weather data
     weatherDiv.empty();
@@ -116,6 +115,7 @@ function showResponse(response){
 
 //look for UV value once initial weather response is returned
 function getUV(response){
+    console.log(response);
     uv = response.value;
     const uvDiv = $(`<p>UV Index: <span id="uv">${uv}</span></p>`);
     weatherDiv.append(uvDiv);
@@ -139,6 +139,7 @@ function getUV(response){
 
 //look for 5 day forecast once initial weather response returns
 function getForecast(response) {
+    console.log(response);
     const forecastDiv = $("#forecast");
     forecastDiv.empty();
 
@@ -152,7 +153,8 @@ function getForecast(response) {
         const title = $(`<h5>${date}</h5>`)
         dateIconDiv.append(title);
 
-        const iconURL = "https://openweathermap.org/img/wn/" + response.list[index].weather[0].icon + "@2x.png";
+        const iconURL = "https://openweathermap.org/img/wn/" + response.list[index].weather[0].icon.replace("n", "d") + "@2x.png";
+        console.log(response.list[index].weather[0].icon.replace("n", "d"));
         const iconImg = $(`<img src=${iconURL} style="width:30px"/>`);
         dateIconDiv.append(iconImg);
         oneDay.append(dateIconDiv);

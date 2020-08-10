@@ -143,6 +143,7 @@ function getForecast(response) {
     const forecastDiv = $("#forecast");
     forecastDiv.empty();
 
+    $("#forecast-title").css("display", "block");
     //populate 5 days out
     let index = 4;
     for (let i = 0; i < 5; i++) {

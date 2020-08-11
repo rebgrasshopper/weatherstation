@@ -145,7 +145,7 @@ function getForecast(response) {
 
     $("#forecast-title").css("display", "block");
     //populate 5 days out
-    let index = 4;
+    let index = 7;
     for (let i = 0; i < 5; i++) {
         const oneDay = $("<div class='day'></div>");
         

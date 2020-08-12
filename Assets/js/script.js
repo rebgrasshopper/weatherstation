@@ -145,7 +145,7 @@ function getForecast(response) {
 
     $("#forecast-title").css("display", "block");
     //populate 5 days out
-    let index = 7;
+    let index = findFirstTimeMatch(response, 18, 22);
     for (let i = 0; i < 5; i++) {
         const oneDay = $("<div class='day'></div>");
         
@@ -155,7 +155,6 @@ function getForecast(response) {
         dateIconDiv.append(title);
 
         const iconURL = "https://openweathermap.org/img/wn/" + response.list[index].weather[0].icon.replace("n", "d") + "@2x.png";
-        console.log(response.list[index].weather[0].icon.replace("n", "d"));
         const iconImg = $(`<img src=${iconURL} style="width:30px"/>`);
         dateIconDiv.append(iconImg);
         oneDay.append(dateIconDiv);
@@ -177,6 +176,18 @@ function getForecast(response) {
     }
 }
 
+//use 24 hour time chunks to locate desired future weather forecast in array
+function findFirstTimeMatch(dataset, minHour, maxHour){
+    for (let i=0; i < dataset.list.length; i++) {
+        let time = parseInt(dataset.list[i].dt_txt.slice(11, 13));
+        if (time < maxHour && time > minHour) {
+            return i
+        }
+    }
+}
+
+
+
 
 //set click even on search submit button
 $("#submit").on("click", function(e){
@@ -193,3 +204,5 @@ $(document).on('click','.history',function(e){
     mostRecentButton = $(this).data("location");
     search();
 });
+
+
